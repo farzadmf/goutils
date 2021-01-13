@@ -45,3 +45,24 @@ func RunCommand(cmdString string) (string, error) {
 
 	return string(combined), nil
 }
+
+// StartCommand uses StartProcess to start a command
+func StartCommand(workingDir, cmdStr string) error {
+	bash, err := exec.LookPath("bash")
+	if err != nil {
+		return err
+	}
+
+	var attr os.ProcAttr
+	attr.Files = []*os.File{
+		os.Stdin,
+		os.Stderr,
+		os.Stdout,
+	}
+	attr.Dir = workingDir
+
+	proc, err := os.StartProcess(bash, []string{"bash", "-c", cmdStr}, &attr)
+	proc.Wait()
+
+	return err
+}
