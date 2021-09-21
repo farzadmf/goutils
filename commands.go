@@ -11,15 +11,13 @@ import (
 
 // SpawnCommand runs a command. It will show the output if 'quiet' is true, otherwise,
 // it won't show anything.
-func SpawnCommand(workingDir, cmdStr string, quiet bool) error {
+func SpawnCommand(workingDir, cmdStr string) error {
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Dir = workingDir
 
-	if !quiet {
-		var stdout, stderr bytes.Buffer
-		cmd.Stdout = io.MultiWriter(os.Stdout, &stdout)
-		cmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
-	}
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdout)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
 
 	return cmd.Run()
 }
